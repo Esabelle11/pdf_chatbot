@@ -1,0 +1,26 @@
+# Gradio UI
+gradio==6.5.1
+gradio-client==2.0.3
+
+# Transformers & Torch for local LLM
+transformers==4.34.0
+torch==2.2.0
+
+# Hugging Face Hub
+huggingface-hub==0.19.4
+
+# Optional: faster tokenization
+sentencepiece==0.1.99
+
+# Embeddings + vector search
+sentence-transformers==2.2.2
+faiss-cpu==1.7.4
+
+# PDF parsing
+pypdf==3.15.1
+
+# Environment variables
+python-dotenv==1.0.1
+
+# Optional: HTTP requests if needed
+httpx==0.25.0
