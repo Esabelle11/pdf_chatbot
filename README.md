@@ -1,58 +1,57 @@
-📄 PDF Chatbot — DocMind AI
+# 📄 PDF Chatbot — DocMind AI
 
-A local-AI powered PDF Question-Answering and Chat Bot built with Gradio and transformer models — designed to let users upload PDF documents and interact with them conversationally.
+A local-AI powered **PDF Question-Answering and Chat Bot** built with **Gradio** and transformer models — designed to let users upload PDF documents and interact with them conversationally.
 
-This project lets you:
+---
 
-✨ Upload a PDF file
-✍️ Extract text from the PDF
-🔍 Generate responses from the document content
-💬 Chat with the bot in natural language
+## ✨ Features
 
-It uses a lightweight transformer model locally — no cloud API required.
+- 📤 Upload a PDF file  
+- ✍️ Extract text from the PDF  
+- 🔍 Generate responses from document content  
+- 💬 Chat with the bot in natural language  
+- 🧠 Retrieval-Augmented Generation (RAG)  
+- 🔄 Conversation memory  
+- 🖥️ Runs locally (no cloud API required)
 
-🧠 How It Works
+---
 
-PDF Processing
+## 🧠 How It Works
 
-Reads your uploaded PDF, splits it into text chunks.
+### 1️⃣ PDF Processing
+- Reads uploaded PDF
+- Splits into text chunks
+- Converts chunks into embeddings
 
-Converts chunks into embeddings for search and retrieval.
+### 2️⃣ RAG Retrieval
+- Retrieves relevant document chunks
+- Injects them into the prompt
 
-RAG-Style Retrieval (Optional)
+### 3️⃣ Local LLM Chat
+- Uses `TinyLlama/TinyLlama-1.1B-Chat`
+- Maintains chat history for context
 
-On user questions, it retrieves relevant chunks from past PDF text.
+### 4️⃣ Gradio Interface
+- Web UI for upload + chat
+- Runs locally on your machine
 
-Combines relevant document context with conversation memory.
+---
 
-Local LLM Chat
+## 🛠️ Tech Stack
 
-Uses a local language model (TinyLlama/TinyLlama-1.1B-Chat) to generate replies.
+| Component | Purpose |
+|-----------|----------|
+| Python | Core language |
+| Gradio | UI Interface |
+| Transformers | Model loading & generation |
+| TinyLlama-1.1B | Local LLM |
+| Custom RAG | PDF parsing & retrieval |
 
-Memory is stored between exchanges for context-aware conversation.
+---
 
-Gradio Interface
+## 🚀 Quick Start
 
-Simple web UI where you upload PDFs and then chat with the bot.
-
-Works entirely locally (model runs on your machine).
-
-🚀 Features
-
-✅ Upload and analyze PDF files
-✅ Conversational Q&A based on PDF content
-✅ Retrieval-Augmented Generation (RAG) for better context
-✅ Memory keeps track of the chatbot history
-✅ Local model — no reliance on external LLM APIs
-
-🛠️ Tech Stack
-Component	Used For
-Python	Core language
-Gradio	UI / Frontend interface
-Transformers	LLM model loading & generation
-TinyLlama-1.1B	Local chat model
-Custom RAG modules	PDF reading, embeddings & vector store
-🚀 Quick Start
+```bash
 # 1. Clone repo
 git clone https://github.com/Esabelle11/pdf_chatbot.git
 cd pdf_chatbot
@@ -62,13 +61,3 @@ pip install -r requirements.txt
 
 # 3. Run the app
 python app.py
-
-
-Then open your Gradio interface in the browser, upload a PDF, and start chatting!
-
-🧩 Use Cases
-
-✔️ Academic paper exploration
-✔ Document knowledge base Q&A
-✔ Fast summarization and topic extraction
-✔ Local AI assistant for PDFs
