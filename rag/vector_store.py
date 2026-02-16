@@ -13,3 +13,6 @@ class VectorStore:
     def search(self, query_embedding, k=3):
         D, I = self.index.search(np.array(query_embedding), k)
         return [self.text_chunks[i] for i in I[0]]
+    
+    def get_all_chunks(self):
+        return self.text_chunks  # return a list of strings

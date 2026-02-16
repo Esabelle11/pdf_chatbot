@@ -1,5 +1,5 @@
 from .embedding import embed_texts
 
-def retrieve(store, query, k=3):
+def retrieve(store, query, k=5):
     query_embedding = embed_texts([query])
     return store.search(query_embedding, k)

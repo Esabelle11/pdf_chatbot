@@ -17,7 +17,7 @@ Always explain reasoning clearly.
 """
 
 # 🧠 Load once when app starts
-LOCAL_MODEL = "nomic/gpt4all-mini"
+LOCAL_MODEL = "TinyLlama/TinyLlama-1.1B-Chat-v1.0"
 tokenizer = AutoTokenizer.from_pretrained(LOCAL_MODEL)
 model = AutoModelForCausalLM.from_pretrained(LOCAL_MODEL)
 
@@ -27,7 +27,14 @@ vector_store = None
 
 
 def process_pdf(file):
-    global vector_store
+    print("In process_pdf function")
+    global vector_store, memory
+
+    # 🔥 Reset everything
+    vector_store = None
+    memory = ConversationMemory(system_prompt)
+
+    # Process new PDF
     text = read_pdf(file.name)
     chunks = chunk_text(text)
     embeddings = embed_texts(chunks)
@@ -35,40 +42,88 @@ def process_pdf(file):
     vector_store = VectorStore(len(embeddings[0]))
     vector_store.add(embeddings, chunks)
 
-    return "PDF processed successfully."
+    print("PDF processed successfully.")
 
-def generate_local_reply(prompt):
+    return "PDF processed successfully. Memory and context reset."
+
+
+def generate_local_reply(messages):
+    print("Generating local reply...")
+    prompt = tokenizer.apply_chat_template(
+        messages,
+        tokenize=False,
+        add_generation_prompt=True
+    )
+
     inputs = tokenizer(prompt, return_tensors="pt")
-    outputs = model.generate(**inputs, max_new_tokens=200)
-    text = tokenizer.decode(outputs[0], skip_special_tokens=True)
-    # extract the model’s reply only
-    return text
+
+    outputs = model.generate(
+        **inputs,
+        max_new_tokens=200,
+        temperature=0.3,
+        top_p=0.9,
+        do_sample=True,
+    )
+    print("Model outputs:", outputs)
+
+    response = tokenizer.decode(outputs[0], skip_special_tokens=True)
+
+    # Remove prompt from output
+    response = response[len(prompt):].strip()
+
+    return response
 
 def chat(message, history):
+    print("In chat function")
     global vector_store
 
-    memory.add_user(message)
+    lower_msg = message.lower()
 
-    # Retrieve RAG context
+    summary_keywords = ["summary", "talking about"]
+    conversational_keywords = ["previous question", "repeat", "last answer"]
+
+    summarize_chunks = any(kw in lower_msg for kw in summary_keywords)
+    use_rag = not any(kw in lower_msg for kw in conversational_keywords)
+
+    # 1️⃣ Build fresh document context
     context = ""
-    if vector_store:
+    if vector_store and use_rag:
         relevant_chunks = retrieve(vector_store, message)
         context = "\n".join(relevant_chunks)
 
-    prompt = f"""
-    You are DocMind AI.
-    Here is context:
-    {context}
+    # 2️⃣ Get conversation memory FIRST (clean, no doc chunks inside)
+    base_messages = memory.get_messages()
 
-    User:
-    {message}
-    """
+    # 3️⃣ Create a COPY for model input
+    messages_for_model = base_messages.copy()
 
-    reply = generate_local_reply(prompt)
+    # 4️⃣ Inject context ONLY into model copy
+    if context:
+        messages_for_model.append({
+            "role": "user",
+            "content": f"""
+                Relevant document context:
+                {context}
+
+                User question:
+                {message}
+            """
+        })
+    else:
+        messages_for_model.append({
+            "role": "user",
+            "content": message
+        })
+
+    # 5️⃣ Generate reply
+    print("Messages for model:", messages_for_model)
+    reply = generate_local_reply(messages_for_model)
+
+    # 6️⃣ NOW store clean conversation into memory
+    memory.add_user(message)        # store original question ONLY
     memory.add_assistant(reply)
 
     return reply
-
 
 
 with gr.Blocks() as demo:
@@ -82,5 +137,6 @@ with gr.Blocks() as demo:
 
     chatbot = gr.ChatInterface(fn=chat)
 
-demo.launch(share=True)
+demo.launch(share=True, debug=True)
+
 
