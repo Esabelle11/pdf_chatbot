@@ -1,7 +1,7 @@
 import gradio as gr
 from transformers import AutoModelForCausalLM, AutoTokenizer
 import torch
-
+import os
 from memory.conversation import ConversationMemory
 from rag.pdf_reader import read_pdf
 from rag.chunking import chunk_text
@@ -137,6 +137,10 @@ with gr.Blocks() as demo:
 
     chatbot = gr.ChatInterface(fn=chat)
 
-demo.launch(share=True, debug=True)
 
-
+if os.getenv("SPACE_ID"):  
+    # Running on Hugging Face
+    demo.launch()
+else:
+    # Running locally
+    demo.launch(share=True, debug=True)
