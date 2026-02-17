@@ -1,3 +1,13 @@
+---
+title: PDF Chatbot
+emoji: 🤖
+colorFrom: blue
+colorTo: indigo
+sdk: gradio
+app_file: app.py
+pinned: false
+---
+
 # 📄 PDF Chatbot — DocMind AI
 
 A local-AI powered **PDF Question-Answering and Chat Bot** built with **Gradio** and transformer models — designed to let users upload PDF documents and interact with them conversationally.
