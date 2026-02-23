@@ -1,0 +1,15 @@
+version: "3.9"
+
+services:
+  pdf_chatbot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: pdf_chatbot
+    ports:
+      - "7860:7860"
+    environment:
+      - PORT=7860
+    volumes:
+      - ./:/app
+    restart: unless-stopped

@@ -59,7 +59,7 @@ A local-AI powered **PDF Question-Answering and Chat Bot** built with **Gradio**
 
 ---
 
-## 🚀 Quick Start
+## 🚀 Quick Start - Local
 
 ```bash
 # 1. Clone repo
@@ -71,3 +71,33 @@ pip install -r requirements.txt
 
 # 3. Run the app
 python app.py
+
+
+## 🐳 Another Option: Docker Setup
+
+### Using Docker Compose (Recommended)
+
+1. **Build and run**
+   ```bash
+   docker-compose up -d
+   ```
+
+2. **Access the application**
+   - Frontend: `http://localhost:7860`
+
+3. **Stop the application**
+   ```bash
+   docker-compose down
+   ```
+
+### Using Docker Only
+
+1. **Build the image**
+   ```bash
+   docker build -t pdf-chatbot .
+   ```
+
+2. **Run the container**
+   ```bash
+   docker run -p 7860:7860 -v $(pwd)/uploads:/app/uploads doc-ai
+   ```

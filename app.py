@@ -143,4 +143,4 @@ if os.getenv("SPACE_ID"):
     demo.launch()
 else:
     # Running locally
-    demo.launch(share=True, debug=True)
+    demo.launch( server_name="0.0.0.0",server_port=7860,share=False, debug=False)
