@@ -71,6 +71,7 @@ pip install -r requirements.txt
 
 # 3. Run the app
 python app.py
+```
 
 
 ## 🐳 Another Option: Docker Setup
